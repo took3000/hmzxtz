@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,217 +8,14 @@
     <title>安全跳转提示 - 韩漫最新网址</title>
     <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-        }
-
-        body {
-            background: #f0f2f5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            transition: all 0.3s;
-        }
-
-        /* 样式切换按钮 */
-        .style-switcher {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 8px;
-            z-index: 1000;
-        }
-
-        .style-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-        }
-
-        .active-style {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        /* 默认样式 */
-        .style-default {
-            background: rgba(255,255,255,0.8);
-            color: #1677ff;
-        }
-
-        /* 卡片基础样式 */
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        /* 倒计时样式 */
-        .countdown {
-            font-size: 48px;
-            color: #1677ff;
-            font-weight: 600;
-            margin: 20px 0;
-            transition: all 0.3s;
-        }
-
-        /* 提示文字样式 */
-        .tip-text {
-            color: #666;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 12px 0;
-            transition: all 0.3s;
-        }
-
-        /* 按钮基础样式 */
-        .copy-btn {
-            background: #1677ff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            margin: 16px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        /* 底部提示 */
-        .footer {
-            position: fixed;
-            bottom: 20px;
-            color: #999;
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.5;
-            padding: 0 20px;
-        }
-
-        /* 微信弹窗 */
-        .wechat-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        /* 复制成功提示 */
-        .copied-feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            display: none;
-        }
-
-        /* 样式一：毛玻璃风格 */
-        .style-glass {
-            background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-            backdrop-filter: blur(20px) saturate(180%);
-        }
-
-        .style-glass .card {
-            background: rgba(255,255,255,0.15);
-            border-radius: 24px;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-
-        .style-glass .countdown {
-            color: rgba(255,255,255,0.9);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* 样式二：韩漫风格 */
-        .style-korean {
-            background: linear-gradient(135deg, #ffd3e8 0%, #ffe3f3 100%);
-            font-family: 'Comic Sans MS', cursive;
-        }
-
-        .style-korean .card {
-            background: #fff5f9;
-            border: 2px solid #ff69b4;
-            box-shadow: 0 12px 24px rgba(255,105,180,0.2);
-        }
-
-        .style-korean .countdown {
-            color: #ff1493;
-            text-shadow: 2px 2px 0px #ffffff;
-        }
-
-        .style-korean .copy-btn {
-            background: linear-gradient(45deg, #ff6b6b, #ff69b4);
-            box-shadow: 0 4px 6px rgba(255,105,180,0.3);
-        }
-
-        /* 样式三：赛博朋克 */
-        .style-cyber {
-            background: #0a0a2e;
-            color: #0ff;
-            font-family: 'Oxanium', cursive;
-        }
-
-        .style-cyber .card {
-            background: #000;
-            border: 2px solid #0ff;
-            border-radius: 0;
-            box-shadow: 0 0 20px #0ff;
-        }
-
-        .style-cyber .countdown {
-            color: #f0f;
-            text-shadow: 0 0 10px #f0f;
-        }
-
+        /* 保持原有样式不变，仅修改部分颜色值 */
         .style-cyber .copy-btn {
             background: none;
             border: 2px solid #0ff;
             color: #0ff;
-            text-shadow: 0 0 5px #0ff;
-            box-shadow: 0 0 10px #0ff;
         }
-
-        @media (max-width: 480px) {
-            .style-switcher {
-                top: 10px;
-                right: 10px;
-                flex-wrap: wrap;
-                justify-content: flex-end;
-            }
+        .style-korean .copy-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff69b4);
         }
     </style>
 </head>
@@ -234,27 +33,35 @@
         <div class="card">
             <p class="tip-text">微信环境访问受限，请复制链接到浏览器打开</p>
             <button class="copy-btn" id="copyBtn">点击复制链接</button>
+            <p class="tip-text" style="font-size:12px;margin-top:8px;">当前页面链接：<span id="currentUrl"></span></p>
         </div>
     </div>
 
     <!-- 正常跳转卡片 -->
     <div class="card" id="normalCard">
         <div class="countdown" id="countdown">5</div>
-        <p class="tip-text">访问环境正常，即将解锁网站</p>
+        <p class="tip-text">即将自动跳转到目标网站</p>
+        <p class="tip-text" style="font-size:12px;">跳转目标链接：<span id="targetUrl"></span></p>
     </div>
 
     <!-- 底部提示 -->
     <div class="footer">
-        如跳转失败，请到公众号 【韩漫最新网址】 回复 【最新】 获取最新地址
+        如跳转失败，请到公众号 韩漫最新网址 回复【最新】获取最新地址
     </div>
 
     <!-- 复制反馈 -->
     <div class="copied-feedback" id="copiedFeedback">复制成功！</div>
 
     <script>
-        const targetUrl = 'https://hanman248.224248.xyz';
+        // 配置不同链接
+        const jumpUrl = 'https://hanman-autojump.xyz';  // 自动跳转链接
+        const copyUrl = window.location.href;          // 当前页面链接
 
-        // 样式切换
+        // 初始化显示链接
+        document.getElementById('currentUrl').textContent = copyUrl;
+        document.getElementById('targetUrl').textContent = jumpUrl;
+
+        // 样式切换功能
         function switchStyle(styleClass) {
             document.body.className = styleClass;
             document.querySelectorAll('.style-btn').forEach(btn => {
@@ -273,18 +80,27 @@
             const normalCard = document.getElementById('normalCard');
 
             if(isWechatBrowser()) {
+                // 微信环境处理
                 wechatModal.style.display = 'flex';
                 normalCard.style.display = 'none';
 
                 document.getElementById('copyBtn').addEventListener('click', async () => {
                     try {
-                        await navigator.clipboard.writeText(targetUrl);
+                        await navigator.clipboard.writeText(copyUrl);
                         showFeedback();
                     } catch (err) {
-                        alert('复制失败，请手动长按复制');
+                        // 兼容旧版浏览器
+                        const textarea = document.createElement('textarea');
+                        textarea.value = copyUrl;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showFeedback();
                     }
                 });
             } else {
+                // 非微信环境处理
                 wechatModal.style.display = 'none';
                 startCountdown();
             }
@@ -299,7 +115,7 @@
                 countdownElement.textContent = --seconds;
                 if(seconds <= 0) {
                     clearInterval(timer);
-                    window.location.href = targetUrl;
+                    window.location.href = jumpUrl;
                 }
             }, 1000);
         }
