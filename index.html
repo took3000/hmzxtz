@@ -4,79 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>安全跳转提示 - 韩漫最新网址</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            font-family: 'Comic Sans MS', cursive, -apple-system, sans-serif;
         }
 
         body {
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #ffd3e8 0%, #ffe3f3 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            transition: all 0.3s;
-        }
-
-        .style-switcher {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 8px;
-            z-index: 1000;
-        }
-
-        .style-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-        }
-
-        .active-style {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .card {
-            background: white;
-            border-radius: 12px;
+            background: #fff5f9;
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 24px rgba(255,105,180,0.2);
+            border: 2px solid #ff69b4;
             max-width: 400px;
             width: 100%;
             text-align: center;
             position: relative;
-            transition: all 0.3s;
         }
 
         .countdown {
             font-size: 48px;
-            color: #1677ff;
+            color: #ff1493;
             font-weight: 600;
             margin: 20px 0;
-            transition: all 0.3s;
+            text-shadow: 2px 2px 0px #ffffff;
         }
 
         .tip-text {
-            color: #666;
+            color: #8b008b;
             font-size: 16px;
             line-height: 1.6;
             margin: 12px 0;
         }
 
         .copy-btn {
-            background: #1677ff;
+            background: linear-gradient(45deg, #ff6b6b, #ff69b4);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -85,14 +59,21 @@
             margin: 16px 0;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(255,105,180,0.3);
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
         }
 
         .footer {
             position: fixed;
             bottom: 20px;
-            color: #999;
+            color: #ff69b4;
             font-size: 12px;
             text-align: center;
+            line-height: 1.5;
+            padding: 0 20px;
         }
 
         .wechat-modal {
@@ -120,93 +101,52 @@
             display: none;
         }
 
-        /* 毛玻璃样式 */
-        .style-glass {
-            background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-            backdrop-filter: blur(20px);
-        }
-        .style-glass .card {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-
-        /* 韩漫样式 */
-        .style-korean {
-            background: linear-gradient(135deg, #ffd3e8, #ffe3f3);
-            font-family: 'Comic Sans MS', cursive;
-        }
-        .style-korean .card {
-            background: #fff5f9;
-            border: 2px solid #ff69b4;
-            box-shadow: 0 12px 24px rgba(255,105,180,0.2);
-        }
-
-        /* 赛博样式 */
-        .style-cyber {
-            background: #0a0a2e;
-            color: #0ff;
-            font-family: 'Oxanium', cursive;
-        }
-        .style-cyber .card {
-            background: #000;
-            border: 2px solid #0ff;
-            box-shadow: 0 0 20px #0ff;
+        .url-display {
+            font-size: 12px;
+            color: #ff1493;
+            word-break: break-all;
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="style-switcher">
-        <button class="style-btn active-style" onclick="switchStyle('')">默认</button>
-        <button class="style-btn" onclick="switchStyle('style-glass')">毛玻璃</button>
-        <button class="style-btn" onclick="switchStyle('style-korean')">韩漫</button>
-        <button class="style-btn" onclick="switchStyle('style-cyber')">赛博</button>
-    </div>
-
+    <!-- 微信弹窗 -->
     <div class="wechat-modal" id="wechatModal">
         <div class="card">
-            <p class="tip-text">请复制当前链接到浏览器打开</p>
-            <button class="copy-btn" id="copyBtn">复制当前链接</button>
-            <p class="tip-text" style="font-size: 12px; margin-top: 15px;">
-                当前页面：<br><span id="currentLink"></span>
-            </p>
+            <p class="tip-text">微信访问受限，请复制链接到浏览器打开</p>
+            <button class="copy-btn" id="copyBtn">点击复制链接</button>
+            <div class="url-display" id="currentUrl"></div>
         </div>
     </div>
 
+    <!-- 正常跳转卡片 -->
     <div class="card" id="normalCard">
         <div class="countdown" id="countdown">5</div>
-        <p class="tip-text">正在跳转到最新地址</p>
-        <p class="tip-text" style="font-size: 12px;">
-            目标地址：<br><span id="targetLink"></span>
-        </p>
+        <p class="tip-text">即将自动跳转到最新地址</p>
+        <div class="url-display" id="targetUrl"></div>
     </div>
 
+    <!-- 底部提示 -->
     <div class="footer">
-        如跳转失败，请到公众号获取最新地址
+        如跳转失败，请到公众号 韩漫最新网址 回复【最新】获取
     </div>
 
+    <!-- 复制反馈 -->
     <div class="copied-feedback" id="copiedFeedback">复制成功！</div>
 
     <script>
         // 配置参数
         const CONFIG = {
-            jumpUrl: 'https://hanman-new.xyz/auto',  // 自动跳转地址
-            currentUrl: window.location.href,        // 当前页面地址
-            wechatTip: '微信访问受限，请复制链接到浏览器打开'
+            jumpUrl: 'https://hanmanzuixinwangzhi.666516.xyz',
+            currentUrl: window.location.href
         };
 
         // 初始化显示
-        document.getElementById('currentLink').textContent = CONFIG.currentUrl;
-        document.getElementById('targetLink').textContent = CONFIG.jumpUrl;
-        document.querySelector('.wechat-modal .tip-text').textContent = CONFIG.wechatTip;
-
-        // 样式切换
-        function switchStyle(styleClass) {
-            document.body.className = styleClass;
-            document.querySelectorAll('.style-btn').forEach(btn => {
-                btn.classList.toggle('active-style', btn.onclick.toString().includes(styleClass));
-            });
-        }
+        document.getElementById('currentUrl').textContent = CONFIG.currentUrl;
+        document.getElementById('targetUrl').textContent = CONFIG.jumpUrl;
 
         // 环境检测
         const isWechat = () => /micromessenger/i.test(navigator.userAgent);
