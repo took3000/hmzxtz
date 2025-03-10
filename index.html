@@ -57,6 +57,7 @@
             font-weight: 600;
             margin: 20px 0;
             text-shadow: 2px 2px 4px rgba(82, 101, 143, 0.1);
+            display: block !important; /* 确保显示 */
         }
 
         /* 提示文字 */
@@ -125,6 +126,7 @@
             align-items: center;
             padding: 20px;
             backdrop-filter: blur(8px);
+            display: none; /* 默认隐藏 */
         }
 
         /* 复制反馈 */
@@ -212,8 +214,29 @@
                     }
                 });
             } else {
+                document.getElementById('normalCard').style.display = 'block';
                 startCountdown();
             }
+        }
+
+        // 修复后的倒计时函数
+        function startCountdown() {
+            let count = 5;
+            const countdownElement = document.getElementById('countdown');
+            
+            if (!countdownElement) {
+                console.error("倒计时元素未找到");
+                return;
+            }
+
+            const timer = setInterval(() => {
+                countdownElement.textContent = count;
+                if(count <= 0) {
+                    clearInterval(timer);
+                    window.location.href = CONFIG.jumpUrl;
+                }
+                count--;
+            }, 1000);
         }
 
         // 传统复制方法
@@ -225,18 +248,6 @@
             document.execCommand('copy');
             document.body.removeChild(input);
             showFeedback();
-        }
-
-        // 倒计时跳转
-        function startCountdown() {
-            let count = 5;
-            const timer = setInterval(() => {
-                document.getElementById('countdown').textContent = --count;
-                if(count <= 0) {
-                    clearInterval(timer);
-                    window.location.href = CONFIG.jumpUrl;
-                }
-            }, 1000);
         }
 
         // 显示反馈
