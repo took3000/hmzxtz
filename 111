@@ -1,354 +1,194 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>安全验证 - 韩漫最新网址</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <meta charset="UTF-8">
+    <!-- 移动端视口设置 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>安全跳转提示</title>
     <style>
-        :root {
-            font-size: 20px; /* 基础单位1rem=10px */
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
         }
 
         body {
-            background: #f0f0f0;
-            font-size: 1.6rem;
-            line-height: 1.5;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        #loading {
+        /* 卡片容器样式 */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        /* 倒计时样式 */
+        .countdown {
+            font-size: 48px;
+            color: #1677ff;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+
+        /* 提示文字样式 */
+        .tip-text {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+
+        /* 复制按钮样式 */
+        .copy-btn {
+            background: #1677ff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #4096ff;
+            transform: translateY(-2px);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 底部提示样式 */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.5;
+            padding: 0 20px;
+        }
+
+        /* 微信弹窗样式 */
+        .wechat-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 成功提示样式 */
+        .copied-feedback {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 1.8rem;
-            z-index: 1000;
-        }
-
-        #pdf-container {
-            max-width: 100%;
-            padding: 2rem 0;
-        }
-
-        .page-wrapper {
-            margin: 1rem auto;
-            background: white;
-            box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.1);
-        }
-
-        .page-canvas {
-            width: 100% !important;
-            height: auto !important;
-        }
-
-        /* 微信提示层 */
-        .wechat-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            backdrop-filter: blur(2.0rem);
-            -webkit-backdrop-filter: blur(2.0rem);
-            background: rgba(255, 255, 255, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-        }
-
-        .tip-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 1.2rem;
-            padding: 2.5rem;
-            box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.15);
-            pointer-events: auto;
-            max-width: 90%;
-            text-align: center;
-        }
-
-        .tip-text {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            color: #333;
-        }
-
-        .copy-btn {
-            background: #000;
+            background: rgba(0, 0, 0, 0.8);
             color: white;
-            border: none;
-            padding: 1.2rem 1.8rem;
-             margin: 0rem 1rem;
-            border-radius: 3rem;
-            font-size: 1.4rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 8rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: none;
         }
-
-        .copy-btn.copied {
-            background: #07C160;
-            animation: bounce 0.6s;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(0.95); }
-        }
-
-        .download-btn {
-    background: #eee; /* 蓝色区分 */
-    margin-top: 1rem;
-            color:#000 ;
-            border-style:solid;
-}
-
-.download-btn.copied {
-    background: #07C160; /* 保持成功状态绿色 */
-}
-
-/* 新增底部提示层样式 */
-        .wechat-overlay.default-overlay {
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            background: rgba(255, 255, 255, 0.0);
-            backdrop-filter: blur(0rem);
-            -webkit-backdrop-filter: blur(0rem);
-        }
-
-        .tip-card.bottom-card {
-            position: fixed;
-            top: 1.8rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 680px;
-            padding: 1.5rem;
-            margin: 0;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.0);
-            box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.0);
-        }
-
-        .tip-card.bottom-card .copy-btn {
-            margin: 0rem 1rem;
-            flex: 1;
-            max-width: 88%;
-            padding: 1.2rem 1rem;
-        }
-        
     </style>
 </head>
 <body>
-    <div id="loading">正在加载文档...</div>
-   
-    <div id="pdf-container"></div>
+    <!-- 微信提示弹窗 -->
+    <div class="wechat-modal" id="wechatModal">
+        <div class="card">
+            <p class="tip-text">微信环境访问受限，请复制链接到浏览器打开</p>
+            <button class="copy-btn" id="copyBtn">点击复制链接</button>
+        </div>
+    </div>
+
+    <!-- 正常倒计时卡片 -->
+    <div class="card" id="normalCard">
+        <div class="countdown" id="countdown">3</div>
+        <p class="tip-text">即将自动跳转到目标网站</p>
+    </div>
+
+    <!-- 底部固定提示 -->
+    <div class="footer">
+        如跳转失败，请到公众号 XXX 回复【最新】获取最新地址
+    </div>
+
+    <!-- 复制成功提示 -->
+    <div class="copied-feedback" id="copiedFeedback">复制成功！</div>
 
     <script>
-      // 修改后的微信提示层逻辑
-    document.addEventListener('DOMContentLoaded', () => {
-        const isWechat = /MicroMessenger/i.test(navigator.userAgent);
-        if (isWechat || true) { // 这里始终显示提示层用于演示
-            const tip = document.createElement('div');
-            const pdfUrl = getCorrectPdfUrl(); // 获取修正后的PDF链接
-            
-            tip.innerHTML = `
-                <div class="wechat-overlay ${!isWechat ? 'default-overlay' : ''}">
-                    <div class="tip-card ${!isWechat ? 'bottom-card' : ''}">
-                        ${isWechat ? '<div class="tip-text">由于微信机制访问受限<br>可复制任一链接到浏览器打开</div>' : ''}
-                        
-                        <!-- 微信环境保持原按钮 -->
-                        ${isWechat ? `
-                         
-                            <button class="copy-btn" onclick="copyUrl(this)">复制链接</button>
-<p>链接24小时有效 过期请前往公众号获取</p>
-                        ` : `
-                            <!-- 非微信环境修改按钮 -->
-
-                        `}
-                    </div>
-                </div>`;
-            document.body.prepend(tip);
+        // 环境检测函数
+        function isWechatBrowser() {
+            const ua = navigator.userAgent.toLowerCase();
+            return ua.includes('micromessenger');
         }
-    });
- 
 
-        // PDF渲染核心逻辑
-        (async function renderPDF() {
-            const loading = document.getElementById('loading');
-            const container = document.getElementById('pdf-container');
+        // 页面初始化逻辑
+        function init() {
+            const targetUrl = 'https://www.deepseek.com/'; // 替换为你的目标网址
+            const wechatModal = document.getElementById('wechatModal');
+            const normalCard = document.getElementById('normalCard');
             
-            try {
-                // 获取PDF路径
-                const params = new URLSearchParams(location.search);
-                const pdfUrl = params.get('file') || '/uploads/default.pdf';
+            if(isWechatBrowser()) {
+                // 微信环境显示弹窗
+                wechatModal.style.display = 'flex';
+                normalCard.style.display = 'none';
 
-                // 显示加载进度
-                loading.textContent = '正在加载文档 (0%)...';
-
-                // 初始化PDF文档
-                const pdfDoc = await pdfjsLib.getDocument({
-                    url: pdfUrl,
-                    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/cmaps/',
-                    cMapPacked: true,
-                    progressData: (progress) => {
-                        const percent = Math.round(progress.loaded / progress.total * 100);
-                        loading.textContent = `正在加载文档 (${percent}%)...`;
+                // 复制按钮逻辑
+                const copyBtn = document.getElementById('copyBtn');
+                const feedback = document.getElementById('copiedFeedback');
+                
+                copyBtn.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(targetUrl);
+                        feedback.style.display = 'block';
+                        setTimeout(() => {
+                            feedback.style.display = 'none';
+                        }, 1500);
+                    } catch (err) {
+                        alert('复制失败，请手动长按复制');
                     }
-                }).promise;
-
-                loading.remove();
-
-                // 逐页渲染
-                for (let i = 1; i <= pdfDoc.numPages; i++) {
-                    const page = await pdfDoc.getPage(i);
-                    const viewport = page.getViewport({ scale: 1 });
-                    
-                    // 计算适配宽度（使用px单位）
-                    const maxWidth = window.innerWidth - 40; 
-                    const scale = maxWidth / viewport.width;
-                    const scaledViewport = page.getViewport({ scale });
-
-                    // 创建画布
-                    const canvas = document.createElement('canvas');
-                    canvas.className = 'page-canvas';
-                    canvas.width = scaledViewport.width;
-                    canvas.height = scaledViewport.height;
-
-                    // 渲染内容
-                    await page.render({
-                        canvasContext: canvas.getContext('2d'),
-                        viewport: scaledViewport
-                    }).promise;
-
-                    // 创建容器
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'page-wrapper';
-                    wrapper.style.width = `${scaledViewport.width}px`;
-                    wrapper.appendChild(canvas);
-                    container.appendChild(wrapper);
-
-                    // 释放内存
-                    await new Promise(resolve => requestAnimationFrame(resolve));
-                }
-
-                // 窗口resize处理
-                let resizeTimer;
-                window.addEventListener('resize', () => {
-                    clearTimeout(resizeTimer);
-                    resizeTimer = setTimeout(() => {
-                        container.innerHTML = '';
-                        renderPDF();
-                    }, 300);
                 });
-
-            } catch(err) {
-                console.error('PDF加载失败:', err);
-                loading.innerHTML = `
-                    <div style="color: red; text-align: center; padding: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">文档加载失败</h3>
-                        <p style="color: #666;">错误类型：${err.name}</p>
-                        <p style="color: #666;">建议操作：</p>
-                        <ul style="text-align: left; margin: 1rem 0;">
-                            <li>• 检查网络连接</li>
-                            <li>• 确认链接有效性</li>
-                            <li>• 尝试刷新页面</li>
-                        </ul>
-                    </div>
-                `;
-            }
-        })();
-
-        // 复制功能
-        function copyUrl(btn) {
-            if (btn.classList.contains('copying')) return;
-            btn.classList.add('copying');
-            
-            const url = location.href;
-            const originalText = btn.textContent;
-
-            const success = () => {
-                btn.textContent = '✓ 复制成功';
-                btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.textContent = '浏览链接';
-                    btn.classList.remove('copied', 'copying');
-                }, 2000);
-            };
-
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url)
-                    .then(success)
-                    .catch(() => fallbackCopy());
             } else {
-                fallbackCopy();
-            }
-
-            function fallbackCopy() {
-                const input = document.createElement('input');
-                input.value = url;
-                input.style.position = 'fixed';
-                document.body.appendChild(input);
-                input.select();
-                try {
-                    if (document.execCommand('copy')) {
-                        success();
-                    } else {
-                        throw new Error('复制失败');
+                // 非微信环境倒计时逻辑
+                wechatModal.style.display = 'none';
+                let seconds = 3;
+                const countdownElement = document.getElementById('countdown');
+                
+                const timer = setInterval(() => {
+                    seconds--;
+                    countdownElement.textContent = seconds;
+                    
+                    if(seconds <= 0) {
+                        clearInterval(timer);
+                        window.location.href = targetUrl;
                     }
-                } catch (err) {
-                    prompt('请手动复制以下链接：', url);
-                } finally {
-                    input.remove();
-                }
+                }, 1000);
             }
         }
-    </script>
-<script>
- // 修改PDF链接获取逻辑
-function getCorrectPdfUrl() {
-    const params = new URLSearchParams(location.search);
-    const filePath = params.get('file');
-    
-    // 关键修复：移除路径中的重复部分
-    if (filePath) {
-        const cleanPath = filePath.replace(/^\/?H\//, ''); // 清除可能存在的/H/前缀
-        return new URL(`/H/${cleanPath}`, window.location.origin).href;
-    }
-    return new URL('/H/default.pdf', window.location.origin).href;
-}
 
-// 修改后的复制函数
-function copyPdfUrl(btn) {
-    if (btn.classList.contains('copying')) return;
-    btn.classList.add('copying');
-    
-    const pdfUrl = getCorrectPdfUrl(); // 获取修正后的链接
-
-    navigator.clipboard.writeText(pdfUrl).then(() => {
-        btn.textContent = '✓ 复制成功';
-        btn.classList.add('copied');
-        setTimeout(() => {
-            btn.textContent = '下载链接';
-            btn.classList.remove('copied', 'copying');
-        }, 2000);
-    }).catch(() => {
-        // 兼容写法
-        const input = document.createElement('input');
-        input.value = pdfUrl;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-        btn.textContent = '✓ 复制成功';
-        btn.classList.add('copied');
-    });
-}
+        // 页面加载后初始化
+        window.onload = init;
     </script>
 </body>
 </html>
