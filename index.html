@@ -11,6 +11,7 @@
             --text-primary: #2a2f36;
             --text-secondary: #6c7a89;
             --accent-color: #052e71;
+            --success-color: #07C160;
         }
 
         * {
@@ -30,7 +31,6 @@
             padding: 20px;
         }
 
-        /* 拟物化卡片 */
         .neumorphic-card {
             background: var(--item-background);
             border: 2px solid #fff;
@@ -44,23 +44,14 @@
             transition: all 0.3s ease-out;
         }
 
-        .neumorphic-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 12px 12px 24px rgba(55, 99, 170, 0.15),
-                       -12px -12px 24px #fff;
-        }
-
-        /* 倒计时数字 */
         .countdown {
             font-size: 48px;
             color: var(--accent-color);
             font-weight: 600;
             margin: 20px 0;
             text-shadow: 2px 2px 4px rgba(82, 101, 143, 0.1);
-            display: block !important; /* 确保显示 */
         }
 
-        /* 提示文字 */
         .tip-text {
             color: var(--text-secondary);
             font-size: 16px;
@@ -68,7 +59,6 @@
             margin: 12px 0;
         }
 
-        /* 拟物化按钮 */
         .neumorphic-btn {
             background: var(--item-background);
             color: var(--accent-color);
@@ -80,16 +70,17 @@
             cursor: pointer;
             box-shadow: 6px 6px 12px rgba(55, 99, 170, 0.1),
                        -6px -6px 12px #fff;
-            transition: all 0.3s ease-out;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            min-width: 140px;
         }
 
-        .neumorphic-btn:active {
-            transform: scale(0.98);
-            box-shadow: inset 6px 6px 12px rgba(55, 99, 170, 0.1),
-                       inset -6px -6px 12px #fff;
+        .neumorphic-btn.copied {
+            color: var(--success-color) !important;
+            transform: scale(0.95);
+            box-shadow: inset 4px 4px 8px rgba(7, 193, 96, 0.1),
+                       inset -4px -4px 8px #fff !important;
         }
 
-        /* URL显示区域 */
         .url-display {
             font-size: 13px;
             color: var(--accent-color);
@@ -100,9 +91,21 @@
             border-radius: 6px;
             border: 1px solid rgba(255,255,255,0.5);
             box-shadow: inset 2px 2px 4px rgba(55, 99, 170, 0.05);
+            min-height: 46px;
+            transition: all 0.3s ease;
         }
 
-        /* 底部提示 */
+        .url-display.updated {
+            color: var(--success-color);
+            animation: pulse 0.6s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
         .footer {
             position: fixed;
             bottom: 20px;
@@ -113,7 +116,6 @@
             padding: 0 20px;
         }
 
-        /* 弹窗蒙版 */
         .wechat-modal {
             position: fixed;
             top: 0;
@@ -121,27 +123,11 @@
             right: 0;
             bottom: 0;
             background: rgba(255,255,255,0.9);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             padding: 20px;
             backdrop-filter: blur(8px);
-            display: none; /* 默认隐藏 */
-        }
-
-        /* 复制反馈 */
-        .copied-feedback {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255,255,255,0.9);
-            color: var(--accent-color);
-            padding: 12px 24px;
-            border-radius: 24px;
-            display: none;
-            box-shadow: 4px 4px 12px rgba(55, 99, 170, 0.1);
-            border: 1px solid rgba(255,255,255,0.5);
         }
 
         @media (max-width: 600px) {
@@ -149,11 +135,9 @@
                 padding: 16px;
                 border-radius: 8px;
             }
-            
             .countdown {
                 font-size: 36px;
             }
-            
             .neumorphic-btn {
                 padding: 10px 20px;
                 font-size: 14px;
@@ -162,7 +146,6 @@
     </style>
 </head>
 <body>
-    <!-- 微信弹窗 -->
     <div class="wechat-modal" id="wechatModal">
         <div class="neumorphic-card">
             <p class="tip-text">微信访问受限，请复制链接到浏览器打开</p>
@@ -171,30 +154,33 @@
         </div>
     </div>
 
-    <!-- 正常跳转卡片 -->
     <div class="neumorphic-card" id="normalCard">
         <div class="countdown" id="countdown">5</div>
         <p class="tip-text">即将自动跳转到最新地址</p>
         <div class="url-display" id="targetUrl"></div>
     </div>
 
-    <!-- 底部提示 -->
     <div class="footer">
         如跳转失败，请到公众号 <span style="color:var(--accent-color)">韩漫最新网址</span> 回复【最新】获取
     </div>
 
-    <!-- 复制反馈 -->
-    <div class="copied-feedback" id="copiedFeedback">✓ 复制成功</div>
-
     <script>
         const CONFIG = {
             jumpUrl: 'https://hanmanzuixinwangzhi.666516.xyz',
-            currentUrl: window.location.href
+            currentUrl: window.location.href,
+            originalText: {
+                urlDisplay: "等待跳转中...",
+                buttonText: "点击复制链接"
+            }
         };
 
-        // 初始化显示
-        document.getElementById('currentUrl').textContent = CONFIG.currentUrl;
-        document.getElementById('targetUrl').textContent = CONFIG.jumpUrl;
+        // 初始化
+        const currentUrlElement = document.getElementById('currentUrl');
+        const targetUrlElement = document.getElementById('targetUrl');
+        const copyBtn = document.getElementById('copyBtn');
+        
+        currentUrlElement.textContent = CONFIG.currentUrl;
+        targetUrlElement.textContent = CONFIG.jumpUrl;
 
         // 环境检测
         const isWechat = () => /micromessenger/i.test(navigator.userAgent);
@@ -204,39 +190,61 @@
             if(isWechat()) {
                 document.getElementById('wechatModal').style.display = 'flex';
                 document.getElementById('normalCard').style.display = 'none';
-                
-                document.getElementById('copyBtn').addEventListener('click', async () => {
-                    try {
-                        await navigator.clipboard.writeText(CONFIG.currentUrl);
-                        showFeedback();
-                    } catch (err) {
-                        legacyCopy(CONFIG.currentUrl);
-                    }
-                });
             } else {
-                document.getElementById('normalCard').style.display = 'block';
                 startCountdown();
             }
         }
 
-        // 修复后的倒计时函数
+        // 倒计时逻辑
         function startCountdown() {
             let count = 5;
-            const countdownElement = document.getElementById('countdown');
-            
-            if (!countdownElement) {
-                console.error("倒计时元素未找到");
-                return;
-            }
-
             const timer = setInterval(() => {
-                countdownElement.textContent = count;
+                document.getElementById('countdown').textContent = --count;
                 if(count <= 0) {
                     clearInterval(timer);
                     window.location.href = CONFIG.jumpUrl;
                 }
-                count--;
             }, 1000);
+        }
+
+        // 复制操作处理
+        async function handleCopy() {
+            if(copyBtn.classList.contains('copied')) return;
+            
+            try {
+                // 执行复制
+                if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(CONFIG.currentUrl);
+                } else {
+                    legacyCopy(CONFIG.currentUrl);
+                }
+
+                // 更新界面状态
+                copyBtn.textContent = "✓ 已复制";
+                copyBtn.classList.add('copied');
+                
+                currentUrlElement.textContent = "现在去打开浏览器吧";
+                targetUrlElement.textContent = "现在去打开浏览器吧";
+                currentUrlElement.classList.add('updated');
+                targetUrlElement.classList.add('updated');
+
+                // 3秒后恢复状态
+                setTimeout(() => {
+                    copyBtn.textContent = CONFIG.originalText.buttonText;
+                    copyBtn.classList.remove('copied');
+                    
+                    currentUrlElement.textContent = CONFIG.currentUrl;
+                    targetUrlElement.textContent = CONFIG.jumpUrl;
+                    currentUrlElement.classList.remove('updated');
+                    targetUrlElement.classList.remove('updated');
+                }, 3000);
+
+            } catch (err) {
+                copyBtn.textContent = "复制失败";
+                setTimeout(() => {
+                    copyBtn.textContent = CONFIG.originalText.buttonText;
+                }, 2000);
+            }
         }
 
         // 传统复制方法
@@ -247,17 +255,11 @@
             input.select();
             document.execCommand('copy');
             document.body.removeChild(input);
-            showFeedback();
         }
 
-        // 显示反馈
-        function showFeedback() {
-            const feedback = document.getElementById('copiedFeedback');
-            feedback.style.display = 'block';
-            setTimeout(() => feedback.style.display = 'none', 1500);
-        }
-
+        // 事件绑定
         window.onload = init;
+        document.getElementById('copyBtn').addEventListener('click', handleCopy);
     </script>
 </body>
 </html>
