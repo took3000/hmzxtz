@@ -143,9 +143,26 @@
                 font-size: 14px;
             }
         }
+
+        /* 添加图片样式 */
+.top-banner {
+  width: 100%;
+  margin-bottom: 20px; /* 与下方内容的间距 */
+}
+
+.top-banner img {
+  width: 100%;
+  height: auto; /* 关键：高度自适应 */
+  display: block; /* 消除图片底部间隙 */
+  object-fit: cover; /* 保持比例并填满容器 */
+}
     </style>
 </head>
 <body>
+    <!-- 在body开始处添加图片容器 -->
+<div class="top-banner">
+  <img src="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093_720w.jpeg" alt="Banner">
+</div>
     <div class="wechat-modal" id="wechatModal">
         <div class="neumorphic-card">
             <p class="tip-text">本站不支持在微信访问，请在浏览器打开</p>
