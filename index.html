@@ -143,19 +143,26 @@
                 font-size: 14px;
             }
         }
+
+        div-fixed {
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 5rem;
+background-color: #f4f4f4; /* 示例背景色 */
+z-index: 1000; /* 确保 div 在页面顶层 */
+}
     </style>
 </head>
 <body>
+    <img class="div-fixed" scr="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093_720w.jpeg">
     <div class="wechat-modal" id="wechatModal">
         <div class="neumorphic-card">
-            <p class="tip-text">本站不支持在微信访问，请在浏览器打开</p>
+            <p class="tip-text">本站不支持在微信访问，体验会非常不好</p>
 
-            <div class="url-display">点击右上角「···」  再点击「在浏览器打开」</div>
             <div class="url-display" id="currentUrl"></div>
-            
-            <button class="neumorphic-btn" id="copyBtn">或者点我复制链接自行到浏览器打开</button>
-            
-        </div>
+          
     </div>
 
     <div class="neumorphic-card" id="normalCard">
