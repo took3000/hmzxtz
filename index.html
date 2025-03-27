@@ -41,7 +41,6 @@
             width: 100%;
             text-align: center;
             transition: all 0.3s ease-out;
-            
         }
 
         .countdown {
@@ -59,28 +58,6 @@
             margin: 12px 0;
         }
 
-        .neumorphic-btn {
-            background: var(--item-background);
-            color: var(--accent-color);
-            border: 2px solid #fff;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            margin: 16px 0;
-            cursor: pointer;
-            box-shadow: 6px 6px 12px rgba(55, 99, 170, 0.1),
-                       -6px -6px 12px #fff;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            min-width: 140px;
-        }
-
-        .neumorphic-btn.copied {
-            color: var(--success-color) !important;
-            transform: scale(0.95);
-            box-shadow: inset 4px 4px 8px rgba(7, 193, 96, 0.1),
-                       inset -4px -4px 8px #fff !important;
-        }
-
         .url-display {
             font-size: 13px;
             color: var(--accent-color);
@@ -92,18 +69,6 @@
             border: 1px solid rgba(255,255,255,0.5);
             box-shadow: inset 2px 2px 4px rgba(55, 99, 170, 0.05);
             min-height: 28px;
-            transition: all 0.3s ease;
-        }
-
-        .url-display.updated {
-            color: var(--success-color);
-            animation: pulse 0.6s ease;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
         }
 
         .footer {
@@ -138,18 +103,9 @@
             .countdown {
                 font-size: 36px;
             }
-            .neumorphic-btn {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
         }
 
-        /* 重置默认边距 */
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
-        /* 固定图片到顶部并铺满宽度 */
+        /* 图片样式 */
         .fixed-image {
             position: fixed;
             top: 0;
@@ -170,7 +126,7 @@
             opacity: 0.5;
         }
         
-        /* 新增样式 */
+        /* 内容显示控制 */
         .wechat-content {
             display: none;
         }
@@ -199,7 +155,6 @@
     <div class="neumorphic-card normal-content" id="normalCard">
         <div class="countdown" id="countdown">5</div>
         <p class="tip-text">环境检测正常，正在解锁网站</p>
-        
         <div class="url-display">免责声明：本站仅服务非中国公民，未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本网站不承担任何法律责任！</div>
         <div class="url-display" id="targetUrl"></div>
     </div>
@@ -210,21 +165,13 @@
 
     <script>
         const CONFIG = {
-            jumpUrl: 'https://hanmzx516.666516.xyz',
-            currentUrl: window.location.href,
-            originalText: {
-                urlDisplay: "等待跳转中...",
-                buttonText: "复制链接"
-            }
+            jumpUrl: 'https://hanmzx516.666516.xyz'
         };
 
         // 初始化
-        const currentUrlElement = document.getElementById('currentUrl');
         const targetUrlElement = document.getElementById('targetUrl');
-        const copyBtn = document.getElementById('copyBtn');
         const topImage = document.getElementById('topImage');
         const bottomImage = document.getElementById('bottomImage');
-        const wechatContent = document.getElementById('wechatContent');
         const normalCard = document.getElementById('normalCard');
         
         targetUrlElement.textContent = CONFIG.jumpUrl;
@@ -237,7 +184,7 @@
             if(isWechat()) {
                 // 微信环境：显示图片，隐藏中间内容
                 document.getElementById('wechatModal').style.display = 'flex';
-                wechatContent.classList.add('show');
+                document.getElementById('wechatContent').classList.add('show');
                 normalCard.style.display = 'none';
                 topImage.style.display = 'block';
                 bottomImage.style.display = 'block';
@@ -263,77 +210,8 @@
             }, 1000);
         }
 
-        // 复制操作处理
-        async function handleCopy() {
-            if(copyBtn && copyBtn.classList.contains('copied')) return;
-            
-            try {
-                // 执行复制
-                if (navigator.clipboard) {
-                    await navigator.clipboard.writeText(CONFIG.currentUrl);
-                } else {
-                    legacyCopy(CONFIG.currentUrl);
-                }
-
-                // 更新界面状态
-                if(copyBtn) {
-                    copyBtn.textContent = "✓ 已复制";
-                    copyBtn.classList.add('copied');
-                }
-                
-                if(currentUrlElement) {
-                    currentUrlElement.textContent = "复制成功，可自行粘贴到浏览器访问";
-                    currentUrlElement.classList.add('updated');
-                }
-                
-                if(targetUrlElement) {
-                    targetUrlElement.textContent = "复制成功，可自行粘贴到浏览器访问";
-                    targetUrlElement.classList.add('updated');
-                }
-
-                // 3秒后恢复状态
-                setTimeout(() => {
-                    if(copyBtn) {
-                        copyBtn.textContent = CONFIG.originalText.buttonText;
-                        copyBtn.classList.remove('copied');
-                    }
-                    
-                    if(currentUrlElement) {
-                        currentUrlElement.textContent = CONFIG.currentUrl;
-                        currentUrlElement.classList.remove('updated');
-                    }
-                    
-                    if(targetUrlElement) {
-                        targetUrlElement.textContent = CONFIG.jumpUrl;
-                        targetUrlElement.classList.remove('updated');
-                    }
-                }, 3000);
-
-            } catch (err) {
-                if(copyBtn) {
-                    copyBtn.textContent = "复制失败";
-                    setTimeout(() => {
-                        copyBtn.textContent = CONFIG.originalText.buttonText;
-                    }, 2000);
-                }
-            }
-        }
-
-        // 传统复制方法
-        function legacyCopy(text) {
-            const input = document.createElement('input');
-            input.value = text;
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand('copy');
-            document.body.removeChild(input);
-        }
-
-        // 事件绑定
+        // 页面加载时初始化
         window.onload = init;
-        if(copyBtn) {
-            copyBtn.addEventListener('click', handleCopy);
-        }
     </script>
 </body>
 </html>
