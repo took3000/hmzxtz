@@ -5,15 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>韩漫最新网址</title>
     <style>
-        :root {
-            --background-color: #f3f5f8;
-            --item-background: linear-gradient(180deg, #f3f5f8, #fff);
-            --text-primary: #2a2f36;
-            --text-secondary: #6c7a89;
-            --accent-color: #052e71;
-            --success-color: #07C160;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -22,81 +13,8 @@
         }
 
         body {
-            background: var(--background-color);
+            background: #f3f5f8;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .neumorphic-card {
-            background: var(--item-background);
-            border: 2px solid #fff;
-            border-radius: 12px;
-            box-shadow: 8px 8px 20px rgba(55, 99, 170, 0.1),
-                       -8px -8px 20px #fff;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            transition: all 0.3s ease-out;
-            margin-top: 60px;
-            margin-bottom: 40px;
-        }
-
-        .countdown {
-            font-size: 48px;
-            color: var(--accent-color);
-            font-weight: 600;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(82, 101, 143, 0.1);
-        }
-
-        .tip-text {
-            color: var(--text-secondary);
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 12px 0;
-        }
-
-        .url-display {
-            font-size: 13px;
-            color: var(--accent-color);
-            word-break: break-all;
-            margin: 4px 0;
-            padding: 12px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: inset 2px 2px 4px rgba(55, 99, 170, 0.05);
-            min-height: 28px;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 20px;
-            color: var(--text-secondary);
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.5;
-            padding: 0 20px;
-            z-index: -1;
-        }
-
-        .wechat-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255,255,255,0.9);
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            backdrop-filter: blur(8px);
-            z-index: 2000;
         }
 
         .fixed-image {
@@ -106,7 +24,6 @@
             width: 100%;
             height: auto;
             z-index: 1000;
-            object-fit: cover;
         }
 
         .fixed-imagex {
@@ -116,24 +33,24 @@
             width: 100%;
             height: auto;
             z-index: -1;
-            object-fit: cover;
             opacity: 0.5;
         }
 
-        .wechat-content {
-            margin-top: 60px;
-            text-align: center;
+        .wechat-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
         }
 
-        @media (max-width: 600px) {
-            .neumorphic-card {
-                padding: 16px;
-                border-radius: 8px;
-                margin-top: 50px;
-            }
-            .countdown {
-                font-size: 36px;
-            }
+        .normal-content {
+            display: none;
         }
     </style>
 </head>
@@ -141,54 +58,29 @@
     <img src="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093.jpeg" class="fixed-image" alt="顶部图片">
     <img src="https://picx.zhimg.com/80/v2-66df1dcc9476ebc1a84d14437b718b4c.png" class="fixed-imagex" alt="底部图片">
 
-    <div class="wechat-modal" id="wechatModal">
-        <div class="wechat-content">
-            <p class="tip-text">不支持在微信访问本站</p>
-            <p class="tip-text">请点击右上角「···」在浏览器打开</p>
-        </div>
-    </div>
+    <div class="wechat-modal" id="wechatModal"></div>
 
-    <div class="neumorphic-card" id="normalCard">
-        <div class="countdown" id="countdown">5</div>
-        <p class="tip-text">环境检测正常，正在解锁网站</p>
-        <div class="url-display">免责声明：本站仅服务非中国公民，未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本网站不承担任何法律责任！</div>
-        <div class="url-display" id="targetUrl"></div>
-    </div>
-
-    <div class="footer">
-        如链接失效，可前往公众号 <span style="color:var(--accent-color)">韩漫最新网址</span> 回复【最新】获取
+    <div class="normal-content" id="normalContent">
+        <script>
+            setTimeout(function() {
+                window.location.href = 'https://hanmzx516.666516.xyz';
+            }, 5000);
+        </script>
     </div>
 
     <script>
-        const CONFIG = {
-            jumpUrl: 'https://hanmzx516.666516.xyz'
-        };
-
-        // 环境检测
-        const isWechat = () => /micromessenger/i.test(navigator.userAgent);
-
-        // 主逻辑
-        function init() {
-            document.getElementById('targetUrl').textContent = CONFIG.jumpUrl;
-            
-            if(isWechat()) {
-                document.getElementById('wechatModal').style.display = 'flex';
-                document.getElementById('normalCard').style.display = 'none';
-            } else {
-                startCountdown();
-            }
+        function isWechat() {
+            return /micromessenger/i.test(navigator.userAgent);
         }
 
-        // 倒计时逻辑
-        function startCountdown() {
-            let count = 5;
-            const timer = setInterval(() => {
-                document.getElementById('countdown').textContent = --count;
-                if(count <= 0) {
-                    clearInterval(timer);
-                    window.location.href = CONFIG.jumpUrl;
-                }
-            }, 1000);
+        function init() {
+            if(isWechat()) {
+                document.getElementById('wechatModal').style.display = 'flex';
+            } else {
+                document.getElementById('normalContent').style.display = 'block';
+                document.querySelector('.fixed-image').style.display = 'none';
+                document.querySelector('.fixed-imagex').style.display = 'none';
+            }
         }
 
         window.onload = init;
