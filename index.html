@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>韩漫最新网址</title>
     <style>
+        :root {
+            --background-color: #f3f5f8;
+            --item-background: linear-gradient(180deg, #f3f5f8, #fff);
+            --text-primary: #2a2f36;
+            --text-secondary: #6c7a89;
+            --accent-color: #052e71;
+            --success-color: #07C160;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,27 +22,98 @@
         }
 
         body {
-            background: #f3f5f8;
+            background: var(--background-color);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .fixed-image {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .neumorphic-card {
+            background: var(--item-background);
+            border: 2px solid #fff;
+            border-radius: 12px;
+            box-shadow: 8px 8px 20px rgba(55, 99, 170, 0.1),
+                       -8px -8px 20px #fff;
+            max-width: 400px;
             width: 100%;
-            height: auto;
-            z-index: 1000;
+            text-align: center;
+            transition: all 0.3s ease-out;
+            
         }
 
-        .fixed-imagex {
+        .countdown {
+            font-size: 48px;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(82, 101, 143, 0.1);
+        }
+
+        .tip-text {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+
+        .neumorphic-btn {
+            background: var(--item-background);
+            color: var(--accent-color);
+            border: 2px solid #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 16px 0;
+            cursor: pointer;
+            box-shadow: 6px 6px 12px rgba(55, 99, 170, 0.1),
+                       -6px -6px 12px #fff;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            min-width: 140px;
+        }
+
+        .neumorphic-btn.copied {
+            color: var(--success-color) !important;
+            transform: scale(0.95);
+            box-shadow: inset 4px 4px 8px rgba(7, 193, 96, 0.1),
+                       inset -4px -4px 8px #fff !important;
+        }
+
+        .url-display {
+            font-size: 13px;
+            color: var(--accent-color);
+            word-break: break-all;
+            margin: 4px 0;
+            padding: 12px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: inset 2px 2px 4px rgba(55, 99, 170, 0.05);
+            min-height: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .url-display.updated {
+            color: var(--success-color);
+            animation: pulse 0.6s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .footer {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: auto;
-            z-index: -1;
-            opacity: 0.5;
+            bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.5;
+            padding: 0 20px;
         }
 
         .wechat-modal {
@@ -46,44 +126,214 @@
             display: none;
             justify-content: center;
             align-items: center;
+            padding: 20px;
             backdrop-filter: blur(8px);
         }
 
+        @media (max-width: 600px) {
+            .neumorphic-card {
+                padding: 16px;
+                border-radius: 8px;
+            }
+            .countdown {
+                font-size: 36px;
+            }
+            .neumorphic-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+
+        /* 重置默认边距 */
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        /* 固定图片到顶部并铺满宽度 */
+        .fixed-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            z-index: 1000;
+            object-fit: cover;
+        }
+        .fixed-imagex {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            z-index: -1;
+            object-fit: cover;
+            opacity: 0.5;
+        }
+        
+        /* 新增样式 */
+        .wechat-content {
+            display: none;
+        }
         .normal-content {
             display: none;
+        }
+        .show {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <img src="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093.jpeg" class="fixed-image" alt="顶部图片">
-    <img src="https://picx.zhimg.com/80/v2-66df1dcc9476ebc1a84d14437b718b4c.png" class="fixed-imagex" alt="底部图片">
+    <!-- 顶部图片 -->
+    <img src="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093.jpeg" class="fixed-image" id="topImage" alt="顶部图片">
+    <!-- 底部图片 -->
+    <img src="https://picx.zhimg.com/80/v2-66df1dcc9476ebc1a84d14437b718b4c.png" class="fixed-imagex" id="bottomImage" alt="底部图片">
 
-    <div class="wechat-modal" id="wechatModal"></div>
+    <!-- 微信环境内容 -->
+    <div class="wechat-modal" id="wechatModal">
+        <div class="neumorphic-card wechat-content" id="wechatContent">
+            <!-- 微信环境下这里的内容被清空，只保留图片 -->
+        </div>
+    </div>
 
-    <div class="normal-content" id="normalContent">
-        <script>
-            setTimeout(function() {
-                window.location.href = 'https://hanmzx516.666516.xyz';
-            }, 5000);
-        </script>
+    <!-- 正常环境内容 -->
+    <div class="neumorphic-card normal-content" id="normalCard">
+        <div class="countdown" id="countdown">5</div>
+        <p class="tip-text">环境检测正常，正在解锁网站</p>
+        
+        <div class="url-display">免责声明：本站仅服务非中国公民，未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本网站不承担任何法律责任！</div>
+        <div class="url-display" id="targetUrl"></div>
+    </div>
+
+    <div class="footer">
+        如链接失效，可前往公众号 <span style="color:var(--accent-color);z-index: 9000; ">韩漫最新网址</span> 回复【最新】获取
     </div>
 
     <script>
-        function isWechat() {
-            return /micromessenger/i.test(navigator.userAgent);
-        }
+        const CONFIG = {
+            jumpUrl: 'https://hanmzx516.666516.xyz',
+            currentUrl: window.location.href,
+            originalText: {
+                urlDisplay: "等待跳转中...",
+                buttonText: "复制链接"
+            }
+        };
 
+        // 初始化
+        const currentUrlElement = document.getElementById('currentUrl');
+        const targetUrlElement = document.getElementById('targetUrl');
+        const copyBtn = document.getElementById('copyBtn');
+        const topImage = document.getElementById('topImage');
+        const bottomImage = document.getElementById('bottomImage');
+        const wechatContent = document.getElementById('wechatContent');
+        const normalCard = document.getElementById('normalCard');
+        
+        targetUrlElement.textContent = CONFIG.jumpUrl;
+
+        // 环境检测
+        const isWechat = () => /micromessenger/i.test(navigator.userAgent);
+
+        // 主逻辑
         function init() {
             if(isWechat()) {
+                // 微信环境：显示图片，隐藏中间内容
                 document.getElementById('wechatModal').style.display = 'flex';
+                wechatContent.classList.add('show');
+                normalCard.style.display = 'none';
+                topImage.style.display = 'block';
+                bottomImage.style.display = 'block';
             } else {
-                document.getElementById('normalContent').style.display = 'block';
-                document.querySelector('.fixed-image').style.display = 'none';
-                document.querySelector('.fixed-imagex').style.display = 'none';
+                // 非微信环境：显示倒计时，隐藏图片
+                document.getElementById('wechatModal').style.display = 'none';
+                normalCard.classList.add('show');
+                topImage.style.display = 'none';
+                bottomImage.style.display = 'none';
+                startCountdown();
             }
         }
 
+        // 倒计时逻辑
+        function startCountdown() {
+            let count = 5;
+            const timer = setInterval(() => {
+                document.getElementById('countdown').textContent = --count;
+                if(count <= 0) {
+                    clearInterval(timer);
+                    window.location.href = CONFIG.jumpUrl;
+                }
+            }, 1000);
+        }
+
+        // 复制操作处理
+        async function handleCopy() {
+            if(copyBtn && copyBtn.classList.contains('copied')) return;
+            
+            try {
+                // 执行复制
+                if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(CONFIG.currentUrl);
+                } else {
+                    legacyCopy(CONFIG.currentUrl);
+                }
+
+                // 更新界面状态
+                if(copyBtn) {
+                    copyBtn.textContent = "✓ 已复制";
+                    copyBtn.classList.add('copied');
+                }
+                
+                if(currentUrlElement) {
+                    currentUrlElement.textContent = "复制成功，可自行粘贴到浏览器访问";
+                    currentUrlElement.classList.add('updated');
+                }
+                
+                if(targetUrlElement) {
+                    targetUrlElement.textContent = "复制成功，可自行粘贴到浏览器访问";
+                    targetUrlElement.classList.add('updated');
+                }
+
+                // 3秒后恢复状态
+                setTimeout(() => {
+                    if(copyBtn) {
+                        copyBtn.textContent = CONFIG.originalText.buttonText;
+                        copyBtn.classList.remove('copied');
+                    }
+                    
+                    if(currentUrlElement) {
+                        currentUrlElement.textContent = CONFIG.currentUrl;
+                        currentUrlElement.classList.remove('updated');
+                    }
+                    
+                    if(targetUrlElement) {
+                        targetUrlElement.textContent = CONFIG.jumpUrl;
+                        targetUrlElement.classList.remove('updated');
+                    }
+                }, 3000);
+
+            } catch (err) {
+                if(copyBtn) {
+                    copyBtn.textContent = "复制失败";
+                    setTimeout(() => {
+                        copyBtn.textContent = CONFIG.originalText.buttonText;
+                    }, 2000);
+                }
+            }
+        }
+
+        // 传统复制方法
+        function legacyCopy(text) {
+            const input = document.createElement('input');
+            input.value = text;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+        }
+
+        // 事件绑定
         window.onload = init;
+        if(copyBtn) {
+            copyBtn.addEventListener('click', handleCopy);
+        }
     </script>
 </body>
 </html>
