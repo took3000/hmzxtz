@@ -93,6 +93,7 @@
             align-items: center;
             padding: 20px;
             backdrop-filter: blur(8px);
+            z-index: 100; /* 确保在图片下方 */
         }
 
         @media (max-width: 600px) {
@@ -112,7 +113,7 @@
             left: 0;
             width: 100%;
             height: auto;
-            z-index: 1000;
+            z-index: 1000; /* 顶部图片在最上层 */
             object-fit: cover;
         }
         .fixed-imagex {
@@ -121,7 +122,7 @@
             left: 0;
             width: 100%;
             height: auto;
-            z-index: -1;
+            z-index: 1000; /* 底部图片也在最上层 */
             object-fit: cover;
             opacity: 0.5;
         }
@@ -160,7 +161,7 @@
     </div>
 
     <div class="footer">
-        如链接失效，可前往公众号 <span style="color:var(--accent-color);z-index: 9000; ">韩漫最新网址</span> 回复【最新】获取
+        如链接失效，可前往公众号 <span style="color:var(--accent-color);z-index: 9000;">韩漫最新网址</span> 回复【最新】获取
     </div>
 
     <script>
@@ -174,7 +175,9 @@
         const bottomImage = document.getElementById('bottomImage');
         const normalCard = document.getElementById('normalCard');
         
-        targetUrlElement.textContent = CONFIG.jumpUrl;
+        if(targetUrlElement) {
+            targetUrlElement.textContent = CONFIG.jumpUrl;
+        }
 
         // 环境检测
         const isWechat = () => /micromessenger/i.test(navigator.userAgent);
@@ -185,15 +188,15 @@
                 // 微信环境：显示图片，隐藏中间内容
                 document.getElementById('wechatModal').style.display = 'flex';
                 document.getElementById('wechatContent').classList.add('show');
-                normalCard.style.display = 'none';
-                topImage.style.display = 'block';
-                bottomImage.style.display = 'block';
+                if(normalCard) normalCard.style.display = 'none';
+                if(topImage) topImage.style.display = 'block';
+                if(bottomImage) bottomImage.style.display = 'block';
             } else {
                 // 非微信环境：显示倒计时，隐藏图片
                 document.getElementById('wechatModal').style.display = 'none';
-                normalCard.classList.add('show');
-                topImage.style.display = 'none';
-                bottomImage.style.display = 'none';
+                if(normalCard) normalCard.classList.add('show');
+                if(topImage) topImage.style.display = 'none';
+                if(bottomImage) bottomImage.style.display = 'none';
                 startCountdown();
             }
         }
@@ -201,8 +204,11 @@
         // 倒计时逻辑
         function startCountdown() {
             let count = 5;
+            const countdownElement = document.getElementById('countdown');
+            if(!countdownElement) return;
+            
             const timer = setInterval(() => {
-                document.getElementById('countdown').textContent = --count;
+                countdownElement.textContent = --count;
                 if(count <= 0) {
                     clearInterval(timer);
                     window.location.href = CONFIG.jumpUrl;
