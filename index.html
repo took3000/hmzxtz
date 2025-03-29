@@ -73,13 +73,14 @@
 
         .wechat-modal {
             margin-top:90px;
-            position: static; /* 修改为 static 让其按正常文档流排列 */
+            position: static;
             display: none;
             flex-direction: column; 
             justify-content: flex-start; 
             align-items: center;
             padding: 0px 20px;
-            z-index: 99;width:100%
+            z-index: 99;
+            width:100%
         }
 
         /* 减少微信环境下卡片之间的间距 */
@@ -154,55 +155,76 @@
             width: 100%;
             text-align: center;
             transition: all 0.3s ease-out;
-            /* 修改为块级元素并设置左右外边距为 auto 实现水平居中 */
             display: block;
             margin: 0 auto 0px; 
         }
         .new-card .text-container {
-            margin-bottom: 20px; /* 增加文字和图片的间距 */
+            margin-bottom: 20px;
         }
         .new-card .big-text {
             font-size: 13px;
-            color: var(--accent-color); /* 改为深蓝色 */
+            color: var(--accent-color);
         }
         .new-card .small-text {
             font-size: 16px;
-            color: var(--accent-color); /* 改为深蓝色 */
+            color: var(--accent-color);
             font-weight: 600;
             margin-bottom: 5px;
         }
         .new-card .image-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px; /* 增加图片和下方文字的间距 */
+            margin-bottom: 20px;
         }
         .new-card .image-container img {
-            width: 100%; /* 图片宽度增大 */
-            height: auto;opacity:0.8;
+            width: 100%;
+            height: auto;
+            opacity:0.8;
             border-radius: 12px;
         }
         .new-card .image-container p {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-top: 10px; /* 增加图片和下方文字的间距 */
+            margin-top: 10px;
+        }
+        
+        /* 新增：环境控制类 */
+        .wechat-only {
+            display: none;
+        }
+        .non-wechat-only {
+            display: none;
+        }
+        .show-in-wechat {
+            display: block;
+        }
+        .show-in-non-wechat {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <!-- 顶部图片 -->
-    <img src="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093.jpeg" class="fixed-image" id="topImage" alt="顶部图片">
-    <!-- 底部图片 -->
-    <img src="https://picx.zhimg.com/80/v2-66df1dcc9476ebc1a84d14437b718b4c.png" class="fixed-imagex" id="bottomImage" alt="底部图片">
+    <!-- 顶部图片 - 微信环境下显示 -->
+    <img src="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093.jpeg" 
+         class="fixed-image wechat-only" 
+         id="topImage" 
+         alt="顶部图片">
+    
+    <!-- 底部图片 - 微信环境下显示 -->
+    <img src="https://picx.zhimg.com/80/v2-66df1dcc9476ebc1a84d14437b718b4c.png" 
+         class="fixed-imagex wechat-only" 
+         id="bottomImage" 
+         alt="底部图片">
 
-    <!-- 微信环境内容 -->
-    <div class="wechat-modal" id="wechatModal">
+    <!-- 微信环境内容 - 只在微信显示 -->
+    <div class="wechat-modal wechat-only" id="wechatModal">
         <div class="neumorphic-card wechat-content" id="wechatContent">
             <p class="tip-text">微信入口打开成功，为获得完整的页面<br>点击右上角「···」在浏览器打开吧</p>
         </div>
     </div>
 
-    <!-- 正常环境下的第一张卡片 -->
-    <div class="neumorphic-card normal-content" id="normalCardOutsideWechat">
+    <!-- 是否成年卡片 - 非微信环境下显示 -->
+    <div class="neumorphic-card non-wechat-only" id="normalCardOutsideWechat">
         <p class="tip-text">请确认您的状态</p>
         <div class="url-display">免责声明：本站仅服务非中国公民，未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本网站不承担任何法律责任！</div>
         <button class="enter-button" id="adultButtonOutsideWechat">我已成年</button>
@@ -211,9 +233,8 @@
         <div class="url-display" id="targetUrlOutsideWechat"></div>
     </div>
 
-    <!-- 正常环境下的第二张卡片 -->
-    <div class="new-card">
-       
+    <!-- 点外卖卡片 - 非微信环境下显示 -->
+    <div class="new-card non-wechat-only">
         <div class="image-container">
             <div>
                 <img src="https://pica.zhimg.com/80/v2-bb7ae34fbc52c82ae0003273aafa8bf3_720w.jpeg">
@@ -222,6 +243,7 @@
         </div>
     </div>
 
+    <!-- 页脚 - 两种环境下都显示 -->
     <div class="footer">
         如链接失效，可前往公众号 <span style="color:var(--accent-color);z-index: 9000;">韩漫最新网址</span> 回复【最新】获取
     </div>
@@ -229,27 +251,13 @@
     <script>
         // 页面加载时初始化
         window.onload = function() {
-            const targetUrlElement = document.getElementById('targetUrl');
             const targetUrlOutsideWechatElement = document.getElementById('targetUrlOutsideWechat');
-            const topImage = document.getElementById('topImage');
-            const bottomImage = document.getElementById('bottomImage');
-            const normalCard = document.getElementById('normalCard');
-            const normalCardOutsideWechat = document.getElementById('normalCardOutsideWechat');
-            const adultButton = document.getElementById('adultButton');
-            const minorButton = document.getElementById('minorButton');
-            const buddhistButton = document.getElementById('buddhistButton');
-            const adultButtonOutsideWechat = document.getElementById('adultButtonOutsideWechat');
-            const minorButtonOutsideWechat = document.getElementById('minorButtonOutsideWechat');
-            const buddhistButtonOutsideWechat = document.getElementById('buddhistButtonOutsideWechat');
-
+            
             // 获取当前域名前缀
             const currentDomain = window.location.hostname;
             const domainPrefix = currentDomain.split('.')[0];
             const newUrl = `https://${domainPrefix}.666516.xyz`;
 
-            if(targetUrlElement) {
-                targetUrlElement.textContent = newUrl;
-            }
             if(targetUrlOutsideWechatElement) {
                 targetUrlOutsideWechatElement.textContent = newUrl;
             }
@@ -259,64 +267,63 @@
 
             // 主逻辑
             function init() {
+                const wechatOnlyElements = document.querySelectorAll('.wechat-only');
+                const nonWechatOnlyElements = document.querySelectorAll('.non-wechat-only');
+                
                 if(isWechat()) {
                     console.log('当前处于微信环境');
-                    // 微信环境：显示图片和微信环境下的内容
-                    document.getElementById('wechatModal').style.display = 'flex';
-                    document.getElementById('wechatContent').classList.add('show');
-                    if(normalCardOutsideWechat) normalCardOutsideWechat.style.display = 'none';
-                    if(topImage) topImage.style.display = 'block';
-                    if(bottomImage) bottomImage.style.display = 'block';
+                    // 显示微信环境下应该显示的元素
+                    wechatOnlyElements.forEach(el => {
+                        el.classList.add('show-in-wechat');
+                    });
+                    // 隐藏非微信环境下应该显示的元素
+                    nonWechatOnlyElements.forEach(el => {
+                        el.classList.remove('show-in-non-wechat');
+                    });
                 } else {
                     console.log('当前处于非微信环境');
-                    // 非微信环境：显示按钮，隐藏图片和微信环境内容
-                    document.getElementById('wechatModal').style.display = 'block';
-                    if(normalCardOutsideWechat) normalCardOutsideWechat.style.display = 'block';
-                    if(topImage) topImage.style.display = 'none';
-                    if(bottomImage) bottomImage.style.display = 'none';
+                    // 显示非微信环境下应该显示的元素
+                    nonWechatOnlyElements.forEach(el => {
+                        el.classList.add('show-in-non-wechat');
+                    });
+                    // 隐藏微信环境下应该显示的元素
+                    wechatOnlyElements.forEach(el => {
+                        el.classList.remove('show-in-wechat');
+                    });
                 }
             }
 
-            // 我已成年按钮点击事件
-            if(adultButton) {
-                adultButton.addEventListener('click', () => {
-                    window.location.href = newUrl;
-                });
-            }
-            if(adultButtonOutsideWechat) {
-                adultButtonOutsideWechat.addEventListener('click', () => {
-                    window.location.href = newUrl;
-                });
-            }
+            // 按钮点击事件处理
+            function setupButtonEvents() {
+                // 我已成年按钮点击事件
+                const adultButton = document.getElementById('adultButtonOutsideWechat');
+                if(adultButton) {
+                    adultButton.addEventListener('click', () => {
+                        window.location.href = newUrl;
+                    });
+                }
 
-            // 我未成年按钮点击事件
-            if(minorButton) {
-                minorButton.addEventListener('click', () => {
-                    const searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent('色情作品对未成年有哪些危害');
-                    window.location.href = searchUrl;
-                });
-            }
-            if(minorButtonOutsideWechat) {
-                minorButtonOutsideWechat.addEventListener('click', () => {
-                    const searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent('色情作品对未成年有哪些危害');
-                    window.location.href = searchUrl;
-                });
-            }
+                // 我未成年按钮点击事件
+                const minorButton = document.getElementById('minorButtonOutsideWechat');
+                if(minorButton) {
+                    minorButton.addEventListener('click', () => {
+                        const searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent('作品对未成年有哪些危害');
+                        window.location.href = searchUrl;
+                    });
+                }
 
-            // 佛教信徒按钮点击事件
-            if(buddhistButton) {
-                buddhistButton.addEventListener('click', () => {
-                    window.close();
-                });
-            }
-            if(buddhistButtonOutsideWechat) {
-                buddhistButtonOutsideWechat.addEventListener('click', () => {
-                    window.close();
-                });
+                // 佛教信徒按钮点击事件
+                const buddhistButton = document.getElementById('buddhistButtonOutsideWechat');
+                if(buddhistButton) {
+                    buddhistButton.addEventListener('click', () => {
+                        window.close();
+                    });
+                }
             }
 
             init();
+            setupButtonEvents();
         };
     </script>
 </body>
-</html>    
+</html>
