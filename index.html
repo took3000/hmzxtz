@@ -175,27 +175,14 @@
         }
         .new-card .image-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px; /* 增加图片和下方文字的间距 */
         }
-        .new-card .image-container .image-wrapper {
-            position: relative;
-            width: 80%;
-            height: 0;
-            /* 根据图片实际宽高比调整 */
-            padding-bottom: 100%; 
-            overflow: visible;
-        }
         .new-card .image-container img {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-90deg);
-            width: 100%;
+            transform: rotate(-90deg);
+            width: 80%; /* 图片宽度增大 */
             height: auto;
             border-radius: 12px;
-            object-fit: contain;
         }
         .new-card .image-container p {
             font-size: 13px;
@@ -233,10 +220,10 @@
             <div class="small-text">所谓饱腹思淫欲，不然点个外卖先</div>
         </div>
         <div class="image-container">
-            <div class="image-wrapper">
+            <div>
                 <img src="https://pic1.zhimg.com/80/v2-1afdc0490b19ac30be2057ab4fa8ab2b_720w.png">
+                <p>扫码下单更优惠</p>
             </div>
-            <p>扫码下单更优惠</p>
         </div>
     </div>
 
