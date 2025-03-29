@@ -183,8 +183,9 @@
             position: relative;
             width: 80%;
             height: 0;
-            padding-bottom: 80%; /* 假设图片是正方形比例，可根据实际调整 */
-            overflow: hidden;
+            /* 根据图片实际宽高比调整 */
+            padding-bottom: 100%; 
+            overflow: visible;
         }
         .new-card .image-container img {
             position: absolute;
@@ -194,6 +195,7 @@
             width: 100%;
             height: auto;
             border-radius: 12px;
+            object-fit: contain;
         }
         .new-card .image-container p {
             font-size: 13px;
