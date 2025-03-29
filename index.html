@@ -176,67 +176,70 @@
     </div>
 
     <script>
-        const CONFIG = {
-            jumpUrl: 'https://books.666516.xyz'
-        };
-
-        // 初始化
-        const targetUrlElement = document.getElementById('targetUrl');
-        const topImage = document.getElementById('topImage');
-        const bottomImage = document.getElementById('bottomImage');
-        const normalCard = document.getElementById('normalCard');
-        const adultButton = document.getElementById('adultButton');
-        const minorButton = document.getElementById('minorButton');
-        const buddhistButton = document.getElementById('buddhistButton');
-        
-        if(targetUrlElement) {
-            targetUrlElement.textContent = CONFIG.jumpUrl;
-        }
-
-        // 环境检测
-        const isWechat = () => /micromessenger/i.test(navigator.userAgent);
-
-        // 主逻辑
-        function init() {
-            if(isWechat()) {
-                // 微信环境：显示图片，隐藏中间内容
-                document.getElementById('wechatModal').style.display = 'flex';
-                document.getElementById('wechatContent').classList.add('show');
-                if(normalCard) normalCard.style.display = 'none';
-                if(topImage) topImage.style.display = 'block';
-                if(bottomImage) bottomImage.style.display = 'block';
-            } else {
-                // 非微信环境：显示按钮，隐藏图片
-                document.getElementById('wechatModal').style.display = 'none';
-                if(normalCard) normalCard.classList.add('show');
-                if(topImage) topImage.style.display = 'none';
-                if(bottomImage) bottomImage.style.display = 'none';
-            }
-        }
-
-        // 我已成年按钮点击事件
-        if(adultButton) {
-            adultButton.addEventListener('click', () => {
-                window.location.href = CONFIG.jumpUrl;
-            });
-        }
-
-        // 我未成年按钮点击事件
-        if(minorButton) {
-            minorButton.addEventListener('click', () => {
-                window.close();
-            });
-        }
-
-        // 佛教信徒按钮点击事件
-        if(buddhistButton) {
-            buddhistButton.addEventListener('click', () => {
-                window.close();
-            });
-        }
-
         // 页面加载时初始化
-        window.onload = init;
+        window.onload = function() {
+            const targetUrlElement = document.getElementById('targetUrl');
+            const topImage = document.getElementById('topImage');
+            const bottomImage = document.getElementById('bottomImage');
+            const normalCard = document.getElementById('normalCard');
+            const adultButton = document.getElementById('adultButton');
+            const minorButton = document.getElementById('minorButton');
+            const buddhistButton = document.getElementById('buddhistButton');
+
+            // 获取当前域名前缀
+            const currentDomain = window.location.hostname;
+            const domainPrefix = currentDomain.split('.')[0];
+            const newUrl = `https://${domainPrefix}.666516.xyz`;
+
+            if(targetUrlElement) {
+                targetUrlElement.textContent = newUrl;
+            }
+
+            // 环境检测
+            const isWechat = () => /micromessenger/i.test(navigator.userAgent);
+
+            // 主逻辑
+            function init() {
+                if(isWechat()) {
+                    // 微信环境：显示图片，隐藏中间内容
+                    document.getElementById('wechatModal').style.display = 'flex';
+                    document.getElementById('wechatContent').classList.add('show');
+                    if(normalCard) normalCard.style.display = 'none';
+                    if(topImage) topImage.style.display = 'block';
+                    if(bottomImage) bottomImage.style.display = 'block';
+                } else {
+                    // 非微信环境：显示按钮，隐藏图片
+                    document.getElementById('wechatModal').style.display = 'none';
+                    if(normalCard) normalCard.classList.add('show');
+                    if(topImage) topImage.style.display = 'none';
+                    if(bottomImage) bottomImage.style.display = 'none';
+                }
+            }
+
+            // 我已成年按钮点击事件
+            if(adultButton) {
+                adultButton.addEventListener('click', () => {
+                    window.location.href = newUrl;
+                });
+            }
+
+            // 我未成年按钮点击事件
+            if(minorButton) {
+                minorButton.addEventListener('click', () => {
+                    const searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent('色情作品对未成年有哪些危害');
+                    window.location.href = searchUrl;
+                });
+            }
+
+            // 佛教信徒按钮点击事件
+            if(buddhistButton) {
+                buddhistButton.addEventListener('click', () => {
+                    window.close();
+                });
+            }
+
+            init();
+        };
     </script>
 </body>
 </html>
