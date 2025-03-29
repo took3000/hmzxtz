@@ -73,14 +73,10 @@
         }
 
         .wechat-modal {
-            position: fixed;
-            top: 120px; /* 纵向居上，距离顶部 120px */
-            left: 0;
-            right: 0;
-            bottom: auto; /* 取消底部定位 */
+            position: static; /* 修改为 static 让其按正常文档流排列 */
             display: none;
             flex-direction: column; 
-            justify-content: flex-start; /* 纵向居上对齐 */
+            justify-content: flex-start; 
             align-items: center;
             padding: 0px 20px;
             z-index: 100;
@@ -127,6 +123,7 @@
         .wechat-content {
             display: none;
         }
+
         .normal-content {
             display: none;
         }
@@ -274,7 +271,7 @@
                 } else {
                     console.log('当前处于非微信环境');
                     // 非微信环境：显示按钮，隐藏图片和微信环境内容
-                    document.getElementById('wechatModal').style.display = 'none';
+                    document.getElementById('wechatModal').style.display = 'block';
                     if(normalCardOutsideWechat) normalCardOutsideWechat.style.display = 'block';
                     if(topImage) topImage.style.display = 'none';
                     if(bottomImage) bottomImage.style.display = 'none';
