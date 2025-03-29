@@ -23,11 +23,6 @@
 
         body {
             background: var(--background-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
@@ -41,7 +36,8 @@
             width: 100%;
             text-align: center;
             transition: all 0.3s ease-out;
-            padding: 30px; /* 加大 padding */
+            padding: 30px;
+            margin: 0 auto 20px;
         }
 
         .countdown {
@@ -88,12 +84,12 @@
             align-items: center;
             padding: 20px;
             backdrop-filter: blur(8px);
-            z-index: 100; /* 确保在图片下方 */
+            z-index: 100;
         }
 
         @media (max-width: 600px) {
             .neumorphic-card {
-                padding: 20px; /* 小屏幕下的 padding */
+                padding: 20px;
                 border-radius: 8px;
             }
             .countdown {
@@ -108,7 +104,7 @@
             left: 0;
             width: 100%;
             height: auto;
-            z-index: 1000; /* 顶部图片在最上层 */
+            z-index: 1000;
             object-fit: cover;
         }
         .fixed-imagex {
@@ -117,11 +113,11 @@
             left: 0;
             width: 100%;
             height: auto;
-            z-index: 1000; /* 底部图片也在最上层 */
+            z-index: 1000;
             object-fit: cover;
             opacity: 0.5;
         }
-        
+
         /* 内容显示控制 */
         .wechat-content {
             display: none;
@@ -143,8 +139,48 @@
             margin: 10px 5px;
         }
         .transparent-button {
-            background-color: rgba(5, 46, 113, 0.22); /* 底色透明度为 22% */
+            background-color: rgba(5, 46, 113, 0.22);
             color: var(--accent-color);
+        }
+        .new-card {
+            background: var(--item-background);
+            border: 2px solid #fff;
+            border-radius: 12px;
+            box-shadow: 8px 8px 20px rgba(55, 99, 170, 0.1),
+                       -8px -8px 20px #fff;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease-out;
+            padding: 20px;
+            margin: 40px auto 20px; /* 增加上边距 */
+        }
+        .new-card .text-container {
+            margin-bottom: 20px; /* 增加文字和图片的间距 */
+        }
+        .new-card .big-text {
+            font-size: 13px;
+            color: var(--accent-color); /* 改为深蓝色 */
+        }
+        .new-card .small-text {
+            font-size: 16px;
+            color: var(--accent-color); /* 改为深蓝色 */
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .new-card .image-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px; /* 增加图片和下方文字的间距 */
+        }
+        .new-card .image-container img {
+            width: 47%; /* 图片宽度增大 */
+            height: auto;
+        }
+        .new-card .image-container p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 10px; /* 增加图片和下方文字的间距 */
         }
     </style>
 </head>
@@ -169,6 +205,24 @@
         <button class="enter-button transparent-button" id="minorButton">我未成年</button>
         <button class="enter-button transparent-button" id="buddhistButton">佛教信徒</button>
         <div class="url-display" id="targetUrl"></div>
+    </div>
+
+    <!-- 新增卡片 -->
+    <div class="new-card">
+        <div class="text-container">
+            <div class="big-text">所谓饱腹思淫欲，不然点个外卖先</div>
+            <div class="small-text">饿了么外卖满减红包</div>
+        </div>
+        <div class="image-container">
+            <div>
+                <img src="https://gd-hbimg.huaban.com/2799061d7cbb0374551967af995027e39d600e021e2cfa-qC3TFI" alt="饿了么外卖图片1">
+                <p>扫码下单更优惠</p>
+            </div>
+            <div>
+                <img src="https://gd-hbimg.huaban.com/2799061d7cbb0374551967af995027e39d600e021e2cfa-qC3TFI" alt="饿了么外卖图片2">
+                <p>扫码下单更优惠</p>
+            </div>
+        </div>
     </div>
 
     <div class="footer">
