@@ -140,7 +140,11 @@
             border-radius: 6px;
             font-size: 16px;
             cursor: pointer;
-            margin: 20px 0;
+            margin: 10px 5px;
+        }
+        .transparent-button {
+            background-color: rgba(5, 46, 113, 0.22); /* 底色透明度为 22% */
+            color: var(--accent-color);
         }
     </style>
 </head>
@@ -159,9 +163,11 @@
 
     <!-- 正常环境内容 -->
     <div class="neumorphic-card normal-content" id="normalCard">
-        <p class="tip-text">环境检测正常，点击按钮进入网站</p>
+        <p class="tip-text">请确认您的状态</p>
         <div class="url-display">免责声明：本站仅服务非中国公民，未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本网站不承担任何法律责任！</div>
-        <button class="enter-button" id="enterButton">点击进入</button>
+        <button class="enter-button" id="adultButton">我已成年</button>
+        <button class="enter-button transparent-button" id="minorButton">我未成年</button>
+        <button class="enter-button transparent-button" id="buddhistButton">佛教信徒</button>
         <div class="url-display" id="targetUrl"></div>
     </div>
 
@@ -179,7 +185,9 @@
         const topImage = document.getElementById('topImage');
         const bottomImage = document.getElementById('bottomImage');
         const normalCard = document.getElementById('normalCard');
-        const enterButton = document.getElementById('enterButton');
+        const adultButton = document.getElementById('adultButton');
+        const minorButton = document.getElementById('minorButton');
+        const buddhistButton = document.getElementById('buddhistButton');
         
         if(targetUrlElement) {
             targetUrlElement.textContent = CONFIG.jumpUrl;
@@ -206,10 +214,24 @@
             }
         }
 
-        // 按钮点击事件
-        if(enterButton) {
-            enterButton.addEventListener('click', () => {
+        // 我已成年按钮点击事件
+        if(adultButton) {
+            adultButton.addEventListener('click', () => {
                 window.location.href = CONFIG.jumpUrl;
+            });
+        }
+
+        // 我未成年按钮点击事件
+        if(minorButton) {
+            minorButton.addEventListener('click', () => {
+                window.close();
+            });
+        }
+
+        // 佛教信徒按钮点击事件
+        if(buddhistButton) {
+            buddhistButton.addEventListener('click', () => {
+                window.close();
             });
         }
 
