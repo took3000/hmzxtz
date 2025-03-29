@@ -234,7 +234,7 @@
     </div>
 
     <!-- 点外卖卡片 - 非微信环境下显示 -->
-    <div class="new-card non-wechat-only">
+    <div class="new-card non-wechat-only" id="takeawayCard">
         <div class="image-container">
             <div>
                 <img src="https://pica.zhimg.com/80/v2-bb7ae34fbc52c82ae0003273aafa8bf3_720w.jpeg">
@@ -267,28 +267,30 @@
 
             // 主逻辑
             function init() {
-                const wechatOnlyElements = document.querySelectorAll('.wechat-only');
-                const nonWechatOnlyElements = document.querySelectorAll('.non-wechat-only');
-                
                 if(isWechat()) {
                     console.log('当前处于微信环境');
                     // 显示微信环境下应该显示的元素
-                    wechatOnlyElements.forEach(el => {
-                        el.classList.add('show-in-wechat');
+                    document.querySelectorAll('.wechat-only').forEach(el => {
+                        el.style.display = 'block';
                     });
+                    // 显示微信环境下的浏览器打开提示卡片
+                    document.getElementById('wechatModal').style.display = 'flex';
+                    document.getElementById('wechatContent').style.display = 'block';
+                    
                     // 隐藏非微信环境下应该显示的元素
-                    nonWechatOnlyElements.forEach(el => {
-                        el.classList.remove('show-in-non-wechat');
+                    document.querySelectorAll('.non-wechat-only').forEach(el => {
+                        el.style.display = 'none';
                     });
                 } else {
                     console.log('当前处于非微信环境');
                     // 显示非微信环境下应该显示的元素
-                    nonWechatOnlyElements.forEach(el => {
-                        el.classList.add('show-in-non-wechat');
+                    document.querySelectorAll('.non-wechat-only').forEach(el => {
+                        el.style.display = 'block';
                     });
+                    
                     // 隐藏微信环境下应该显示的元素
-                    wechatOnlyElements.forEach(el => {
-                        el.classList.remove('show-in-wechat');
+                    document.querySelectorAll('.wechat-only').forEach(el => {
+                        el.style.display = 'none';
                     });
                 }
             }
