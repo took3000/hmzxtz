@@ -195,36 +195,45 @@
         <div class="neumorphic-card wechat-content" id="wechatContent">
             <p class="tip-text">微信入口打开成功，为获得完整的页面<br>点击右上角「···」在浏览器打开吧<br><br>- 未成年人及佛教信徒止步 -</p>
         </div>
-        <!-- 新增卡片 -->
-    <div class="new-card">
-        <div class="text-container">
-            <div class="big-text">所谓饱腹思淫欲，不然点个外卖先</div>
-            <div class="small-text">饿了么外卖满减红包</div>
+        <!-- 正常环境内容 -->
+        <div class="neumorphic-card normal-content" id="normalCard">
+            <p class="tip-text">请确认您的状态</p>
+            <div class="url-display">免责声明：本站仅服务非中国公民，未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本网站不承担任何法律责任！</div>
+            <button class="enter-button" id="adultButton">我已成年</button>
+            <button class="enter-button transparent-button" id="minorButton">我未成年</button>
+            <button class="enter-button transparent-button" id="buddhistButton">佛教信徒</button>
+            <div class="url-display" id="targetUrl"></div>
         </div>
-        <div class="image-container">
-            <div>
-                <img src="https://gd-hbimg.huaban.com/2799061d7cbb0374551967af995027e39d600e021e2cfa-qC3TFI" alt="饿了么外卖图片1">
-                <p>扫码下单更优惠</p>
+        <!-- 复制第二张卡片到微信环境 -->
+        <div class="new-card">
+            <div class="text-container">
+                <div class="big-text">所谓饱腹思淫欲，不然点个外卖先</div>
+                <div class="small-text">饿了么外卖满减红包</div>
             </div>
-            <div>
-                <img src="https://gd-hbimg.huaban.com/2799061d7cbb0374551967af995027e39d600e021e2cfa-qC3TFI" alt="饿了么外卖图片2">
-                <p>扫码下单更优惠</p>
+            <div class="image-container">
+                <div>
+                    <img src="https://gd-hbimg.huaban.com/2799061d7cbb0374551967af995027e39d600e021e2cfa-qC3TFI" alt="饿了么外卖图片1">
+                    <p>扫码下单更优惠</p>
+                </div>
+                <div>
+                    <img src="https://gd-hbimg.huaban.com/2799061d7cbb0374551967af995027e39d600e021e2cfa-qC3TFI" alt="饿了么外卖图片2">
+                    <p>扫码下单更优惠</p>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
-    <!-- 正常环境内容 -->
-    <div class="neumorphic-card normal-content" id="normalCard">
+    <!-- 正常环境下的第一张卡片 -->
+    <div class="neumorphic-card normal-content" id="normalCardOutsideWechat">
         <p class="tip-text">请确认您的状态</p>
         <div class="url-display">免责声明：本站仅服务非中国公民，未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本网站不承担任何法律责任！</div>
-        <button class="enter-button" id="adultButton">我已成年</button>
-        <button class="enter-button transparent-button" id="minorButton">我未成年</button>
-        <button class="enter-button transparent-button" id="buddhistButton">佛教信徒</button>
-        <div class="url-display" id="targetUrl"></div>
+        <button class="enter-button" id="adultButtonOutsideWechat">我已成年</button>
+        <button class="enter-button transparent-button" id="minorButtonOutsideWechat">我未成年</button>
+        <button class="enter-button transparent-button" id="buddhistButtonOutsideWechat">佛教信徒</button>
+        <div class="url-display" id="targetUrlOutsideWechat"></div>
     </div>
 
-    <!-- 新增卡片 -->
+    <!-- 正常环境下的第二张卡片 -->
     <div class="new-card">
         <div class="text-container">
             <div class="big-text">所谓饱腹思淫欲，不然点个外卖先</div>
@@ -250,12 +259,17 @@
         // 页面加载时初始化
         window.onload = function() {
             const targetUrlElement = document.getElementById('targetUrl');
+            const targetUrlOutsideWechatElement = document.getElementById('targetUrlOutsideWechat');
             const topImage = document.getElementById('topImage');
             const bottomImage = document.getElementById('bottomImage');
             const normalCard = document.getElementById('normalCard');
+            const normalCardOutsideWechat = document.getElementById('normalCardOutsideWechat');
             const adultButton = document.getElementById('adultButton');
             const minorButton = document.getElementById('minorButton');
             const buddhistButton = document.getElementById('buddhistButton');
+            const adultButtonOutsideWechat = document.getElementById('adultButtonOutsideWechat');
+            const minorButtonOutsideWechat = document.getElementById('minorButtonOutsideWechat');
+            const buddhistButtonOutsideWechat = document.getElementById('buddhistButtonOutsideWechat');
 
             // 获取当前域名前缀
             const currentDomain = window.location.hostname;
@@ -265,6 +279,9 @@
             if(targetUrlElement) {
                 targetUrlElement.textContent = newUrl;
             }
+            if(targetUrlOutsideWechatElement) {
+                targetUrlOutsideWechatElement.textContent = newUrl;
+            }
 
             // 环境检测
             const isWechat = () => /micromessenger/i.test(navigator.userAgent);
@@ -272,16 +289,18 @@
             // 主逻辑
             function init() {
                 if(isWechat()) {
-                    // 微信环境：显示图片，隐藏中间内容
+                    console.log('当前处于微信环境');
+                    // 微信环境：显示图片和微信环境下的内容
                     document.getElementById('wechatModal').style.display = 'flex';
                     document.getElementById('wechatContent').classList.add('show');
-                    if(normalCard) normalCard.style.display = 'none';
+                    if(normalCardOutsideWechat) normalCardOutsideWechat.style.display = 'none';
                     if(topImage) topImage.style.display = 'block';
                     if(bottomImage) bottomImage.style.display = 'block';
                 } else {
-                    // 非微信环境：显示按钮，隐藏图片
+                    console.log('当前处于非微信环境');
+                    // 非微信环境：显示按钮，隐藏图片和微信环境内容
                     document.getElementById('wechatModal').style.display = 'none';
-                    if(normalCard) normalCard.classList.add('show');
+                    if(normalCardOutsideWechat) normalCardOutsideWechat.style.display = 'block';
                     if(topImage) topImage.style.display = 'none';
                     if(bottomImage) bottomImage.style.display = 'none';
                 }
@@ -293,6 +312,11 @@
                     window.location.href = newUrl;
                 });
             }
+            if(adultButtonOutsideWechat) {
+                adultButtonOutsideWechat.addEventListener('click', () => {
+                    window.location.href = newUrl;
+                });
+            }
 
             // 我未成年按钮点击事件
             if(minorButton) {
@@ -301,10 +325,21 @@
                     window.location.href = searchUrl;
                 });
             }
+            if(minorButtonOutsideWechat) {
+                minorButtonOutsideWechat.addEventListener('click', () => {
+                    const searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent('色情作品对未成年有哪些危害');
+                    window.location.href = searchUrl;
+                });
+            }
 
             // 佛教信徒按钮点击事件
             if(buddhistButton) {
                 buddhistButton.addEventListener('click', () => {
+                    window.close();
+                });
+            }
+            if(buddhistButtonOutsideWechat) {
+                buddhistButtonOutsideWechat.addEventListener('click', () => {
                     window.close();
                 });
             }
