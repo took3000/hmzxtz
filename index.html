@@ -74,19 +74,24 @@
 
         .wechat-modal {
             position: fixed;
-            top: 0;
+            top: 60px; /* 纵向居上，距离顶部 60px */
             left: 0;
             right: 0;
-            bottom: 0;
+            bottom: auto; /* 取消底部定位 */
             background: rgba(255,255,255,0.9);
             display: none;
-            /* 修改为 flex 布局，垂直排列 */
             flex-direction: column; 
-            justify-content: center;
+            justify-content: flex-start; /* 纵向居上对齐 */
             align-items: center;
             padding: 20px;
             backdrop-filter: blur(8px);
             z-index: 100;
+        }
+
+        /* 减少微信环境下卡片之间的间距 */
+        .wechat-modal .neumorphic-card,
+        .wechat-modal .new-card {
+            margin-bottom: 10px; 
         }
 
         @media (max-width: 600px) {
@@ -351,5 +356,4 @@
     </script>
 </body>
 </html>
-
     
