@@ -32,11 +32,14 @@
             border-radius: 12px;
             box-shadow: 8px 8px 20px rgba(55, 99, 170, 0.1),
                        -8px -8px 20px #fff;
-            width:100%;
+            max-width: 400px;
+            width: 100%;
             text-align: center;
             transition: all 0.3s ease-out;
             padding: 30px;
-            margin: 0 auto 20px;
+            margin: 80px auto 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .countdown {
@@ -49,13 +52,14 @@
 
         .tip-text {
             color: var(--text-secondary);
-            font-size: 16px;
+            color: red;
+            font-size: 14px; font-weight: 600;
             line-height: 1.6;
-            margin: 12px 0;
+            margin: 8px 0;
         }
 
         .url-display {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--accent-color);
             word-break: break-all;
             margin: 4px 0;
@@ -69,24 +73,7 @@
             text-align: center;
             line-height: 1.5;
             padding: 0 20px;
-        }
-
-        .wechat-modal {
-            margin-top:90px;
-            position: static;
-            display: none;
-            flex-direction: column; 
-            justify-content: flex-start; 
-            align-items: center;
-            padding: 0px 20px;
-            z-index: 99;
-            width:100%
-        }
-
-        /* 减少微信环境下卡片之间的间距 */
-        .wechat-modal .neumorphic-card,
-        .wechat-modal .new-card {
-            margin-bottom: 20px; 
+            z-index: 1;
         }
 
         @media (max-width: 600px) {
@@ -106,47 +93,37 @@
             left: 0;
             width: 100%;
             height: auto;
-            z-index: -1;
+            z-index: -2;
             object-fit: cover;
+            opacity: 1; /* 调整透明度 */
         }
         .fixed-imagex {
             position: fixed;
-            bottom: 0;
+            bottom: -160px;
             left: 0;
             width: 100%;
             height: auto;
             z-index: -1;
             object-fit: cover;
-            opacity: 0.5;
+            opacity: 0.2; /* 调整透明度 */
         }
 
-        /* 内容显示控制 */
-        .wechat-content {
-            display: none;
-        }
-
-        .normal-content {
-            display: none;
-        }
-        .show {
-            display: block;
-        }
         .enter-button {
             background-color: var(--accent-color);
             color: white;
-            padding: 10px 20px;
+            padding: 10px 16px;
             border: none;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
-            margin: 10px 5px;
+            margin: 10px 12px;
         }
         .transparent-button {
             background-color: rgba(5, 46, 113, 0.22);
             color: var(--accent-color);
         }
         .new-card {
-           background: var(--item-background);
+            background: #fff;
             border: 2px solid #fff;
             border-radius: 12px;
             box-shadow: 8px 8px 20px rgba(55, 99, 170, 0.1),
@@ -155,8 +132,11 @@
             width: 100%;
             text-align: center;
             transition: all 0.3s ease-out;
+            padding: 20px;
             display: block;
-            margin: 0 auto 0px; 
+            margin: 0 auto 80px;
+            position: relative;
+            z-index: 1;
         }
         .new-card .text-container {
             margin-bottom: 20px;
@@ -174,76 +154,53 @@
         .new-card .image-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
         }
         .new-card .image-container img {
-            width: 100%;
+            width: 94%;
             height: auto;
-            opacity:0.8;
-            border-radius: 12px;
+            border-radius: 24px;
         }
-        .new-card .image-container p {
+
+        .new-card .image-container div {
+            width: 48%;
+            height: auto;
+        }
+        .new-card p {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-top: 10px;
-        }
-        
-        /* 新增：环境控制类 */
-        .wechat-only {
-            display: none;
-        }
-        .non-wechat-only {
-            display: none;
-        }
-        .show-in-wechat {
-            display: block;
-        }
-        .show-in-non-wechat {
-            display: block;
+            margin-top: 4px;
         }
     </style>
 </head>
 <body>
-    <!-- 顶部图片 - 微信环境下显示 -->
-    <img src="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093.jpeg" 
-         class="fixed-image wechat-only" 
-         id="topImage" 
-         alt="顶部图片">
-    
-    <!-- 底部图片 - 微信环境下显示 -->
-    <img src="https://picx.zhimg.com/80/v2-66df1dcc9476ebc1a84d14437b718b4c.png" 
-         class="fixed-imagex wechat-only" 
-         id="bottomImage" 
-         alt="底部图片">
+    <!-- 顶部图片 -->
+    <img src="https://pic1.zhimg.com/80/v2-6b4054f37ed8c02bb892346c37b67093.jpeg" class="fixed-image" id="topImage" alt="顶部图片">
+    <!-- 底部图片
+        <div class="url-display" id="targetUrl"></div> -->
+    <img src="https://picx.zhimg.com/80/v2-66df1dcc9476ebc1a84d14437b718b4c.png" class="fixed-imagex" id="bottomImage" alt="底部图片">
 
-    <!-- 微信环境内容 - 只在微信显示 -->
-    <div class="wechat-modal wechat-only" id="wechatModal">
-        <div class="neumorphic-card wechat-content" id="wechatContent">
-            <p class="tip-text">微信入口打开成功，为获得完整的页面<br>点击右上角「···」在浏览器打开吧</p>
-        </div>
+    <div class="neumorphic-card">
+        <p class="tip-text">如需浏览，请使用浏览器访问本页并确认您的状态</p>
+        <div class="url-display">免责声明：韩漫最新网址站仅服务非中国公民，且未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本站不承担任何法律责任！</div>
+        <button class="enter-button" id="adultButton">我已成年</button>
+        <button class="enter-button transparent-button" id="minorButton">我未成年</button>
     </div>
 
-    <!-- 是否成年卡片 - 非微信环境下显示 -->
-    <div class="neumorphic-card non-wechat-only" id="normalCardOutsideWechat">
-        <p class="tip-text">请确认您的状态</p>
-        <div class="url-display">免责声明：本站仅服务非中国公民，未满当地法定年龄的公民禁止浏览本站，否则造成的一切影响本网站不承担任何法律责任！</div>
-        <button class="enter-button" id="adultButtonOutsideWechat">我已成年</button>
-        <button class="enter-button transparent-button" id="minorButtonOutsideWechat">我未成年</button>
-        <button class="enter-button transparent-button" id="buddhistButtonOutsideWechat">佛教信徒</button>
-        <div class="url-display" id="targetUrlOutsideWechat"></div>
-    </div>
-
-    <!-- 点外卖卡片 - 非微信环境下显示 -->
     <div class="new-card">
-        <div class="image-container">
-            <div>
-                <img src="https://pica.zhimg.com/80/v2-bb7ae34fbc52c82ae0003273aafa8bf3_720w.jpeg">
-                <p>所谓饱腹思Y欲，不然点个外卖先 | 身体精神双重满足</p>
-            </div>
+        <div class="text-container">
+            <div class="small-text">所谓饱腹思淫欲，不如点个外卖先</div>
+           <p>成年人的食与色，我全包了</p>
         </div>
+        <div class="image-container">
+              
+                   
+            
+                
+           
+    <div>   <img src="https://pic1.zhimg.com/80/v2-c911cbbb3f316a30ee539e948aedcf70_720w.png"><img src="https://picx.zhimg.com/80/v2-43c7d33f5945835c32cb0afa6b426071_720w.png"></div>
+         <div> <img src="https://picx.zhimg.com/80/v2-1642722baaa7448b25b2dcf3e27f5375_720w.jpeg"><p>💗</p><p>超大额外卖优惠</p><p>长按或扫码领取</p></div>
     </div>
 
-    <!-- 页脚 - 两种环境下都显示 -->
     <div class="footer">
         如链接失效，可前往公众号 <span style="color:var(--accent-color);z-index: 9000;">韩漫最新网址</span> 回复【最新】获取
     </div>
@@ -251,81 +208,42 @@
     <script>
         // 页面加载时初始化
         window.onload = function() {
-            const targetUrlOutsideWechatElement = document.getElementById('targetUrlOutsideWechat');
-            
+            const targetUrlElement = document.getElementById('targetUrl');
+
             // 获取当前域名前缀
             const currentDomain = window.location.hostname;
             const domainPrefix = currentDomain.split('.')[0];
             const newUrl = `https://${domainPrefix}.666516.xyz`;
 
-            if(targetUrlOutsideWechatElement) {
-                targetUrlOutsideWechatElement.textContent = newUrl;
+            if (targetUrlElement) {
+                targetUrlElement.textContent = newUrl;
             }
 
-            // 环境检测
-            const isWechat = () => /micromessenger/i.test(navigator.userAgent);
-
-            // 主逻辑
-            function init() {
-                if(isWechat()) {
-                    console.log('当前处于微信环境');
-                    // 显示微信环境下应该显示的元素
-                    document.querySelectorAll('.wechat-only').forEach(el => {
-                        el.style.display = 'block';
-                    });
-                    // 显示微信环境下的浏览器打开提示卡片
-                    document.getElementById('wechatModal').style.display = 'flex';
-                    document.getElementById('wechatContent').style.display = 'block';
-                    
-                    // 隐藏非微信环境下应该显示的元素
-                    document.querySelectorAll('.non-wechat-only').forEach(el => {
-                        el.style.display = 'none';
-                    });
-                } else {
-                    console.log('当前处于非微信环境');
-                    // 显示非微信环境下应该显示的元素
-                    document.querySelectorAll('.non-wechat-only').forEach(el => {
-                        el.style.display = 'block';
-                    });
-                    
-                    // 隐藏微信环境下应该显示的元素
-                    document.querySelectorAll('.wechat-only').forEach(el => {
-                        el.style.display = 'none';
-                    });
-                }
+            // 我已成年按钮点击事件
+            const adultButton = document.getElementById('adultButton');
+            if (adultButton) {
+                adultButton.addEventListener('click', () => {
+                    window.location.href = newUrl;
+                });
             }
 
-            // 按钮点击事件处理
-            function setupButtonEvents() {
-                // 我已成年按钮点击事件
-                const adultButton = document.getElementById('adultButtonOutsideWechat');
-                if(adultButton) {
-                    adultButton.addEventListener('click', () => {
-                        window.location.href = newUrl;
-                    });
-                }
-
-                // 我未成年按钮点击事件
-                const minorButton = document.getElementById('minorButtonOutsideWechat');
-                if(minorButton) {
-                    minorButton.addEventListener('click', () => {
-                        const searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent('作品对未成年有哪些危害');
-                        window.location.href = searchUrl;
-                    });
-                }
-
-                // 佛教信徒按钮点击事件
-                const buddhistButton = document.getElementById('buddhistButtonOutsideWechat');
-                if(buddhistButton) {
-                    buddhistButton.addEventListener('click', () => {
-                        window.close();
-                    });
-                }
+            // 我未成年按钮点击事件
+            const minorButton = document.getElementById('minorButton');
+            if (minorButton) {
+                minorButton.addEventListener('click', () => {
+                    const searchUrl = 'https://www.baidu.com/s?wd=' + encodeURIComponent('作品对未成年有哪些危害');
+                    window.location.href = searchUrl;
+                });
             }
 
-            init();
-            setupButtonEvents();
+            // 佛教信徒按钮点击事件
+            const buddhistButton = document.getElementById('buddhistButton');
+            if (buddhistButton) {
+                buddhistButton.addEventListener('click', () => {
+                    window.close();
+                });
+            }
         };
     </script>
 </body>
-</html>
+</html>    
